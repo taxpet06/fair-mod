@@ -1,0 +1,16 @@
+\begin{table}[t]\centering\small
+\resizebox{\linewidth}{!}{\begin{tabular}{lrrr}\toprule
+Reason (hand-coded) & FP & FN & Total\\\midrule
+Harsh but civil disagreement & 27 & 24 & 51\\
+Implicit or coded hostility & 0 & 30 & 30\\
+Identity mention, not hostile & 28 & 0 & 28\\
+Gold label looks wrong & 11 & 12 & 23\\
+Sarcasm or irony & 7 & 13 & 20\\
+Genuinely ambiguous & 12 & 6 & 18\\
+Quoting or reporting toxicity & 8 & 9 & 17\\
+Rude words, not aimed at anyone & 7 & 1 & 8\\
+Other: disguised insult or truncation & 0 & 5 & 5\\
+Total & 100 & 100 & 200\\
+\bottomrule\end{tabular}}
+\caption{Main reason for each of 200 test errors of the best model (100 false positives and 100 false negatives, sampled at random), labelled by hand by the author. One label per error.}\label{tab:hand}
+\end{table}

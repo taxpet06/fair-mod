@@ -1,0 +1,12 @@
+\begin{table}[t]\centering\small\setlength\tabcolsep{2.5pt}
+\resizebox{\linewidth}{!}{\begin{tabular}{lccccc}\toprule
+DistilBERT & AUC & F1 & Bias AUC & Worst-gr. & $|$FPR gap$|$\\\midrule
+erm (3) & 0.940{\scriptsize$\pm$0.000} & 0.658{\scriptsize$\pm$0.000} & 0.905{\scriptsize$\pm$0.000} & 0.584{\scriptsize$\pm$0.030} & 0.075{\scriptsize$\pm$0.012}\\
+cda (3) & 0.939{\scriptsize$\pm$0.000} & 0.656{\scriptsize$\pm$0.001} & 0.905{\scriptsize$\pm$0.000} & 0.598{\scriptsize$\pm$0.014} & 0.072{\scriptsize$\pm$0.008}\\
+reweight (3) & 0.930{\scriptsize$\pm$0.001} & 0.632{\scriptsize$\pm$0.003} & 0.902{\scriptsize$\pm$0.001} & 0.477{\scriptsize$\pm$0.016} & 0.023{\scriptsize$\pm$0.004}\\
+dro (3) & 0.914{\scriptsize$\pm$0.000} & 0.577{\scriptsize$\pm$0.003} & 0.887{\scriptsize$\pm$0.001} & 0.353{\scriptsize$\pm$0.024} & 0.029{\scriptsize$\pm$0.002}\\
+soft (3) & 0.943{\scriptsize$\pm$0.000} & 0.663{\scriptsize$\pm$0.002} & 0.909{\scriptsize$\pm$0.000} & 0.621{\scriptsize$\pm$0.032} & 0.078{\scriptsize$\pm$0.008}\\
+combo (3) & 0.937{\scriptsize$\pm$0.000} & 0.645{\scriptsize$\pm$0.004} & 0.909{\scriptsize$\pm$0.000} & 0.558{\scriptsize$\pm$0.034} & 0.034{\scriptsize$\pm$0.007}\\
+\bottomrule\end{tabular}}
+\caption{DistilBERT across training seeds: mean $\pm$ standard deviation (number of seeds in parentheses). Each seed gets its own validation temperature and threshold.}\label{tab:seeds}
+\end{table}

@@ -1,0 +1,82 @@
+{
+ "models": {
+  "majority": {
+   "temperature": 1.0,
+   "threshold": 0.5
+  },
+  "tfidf_erm": {
+   "temperature": 0.9930579051217049,
+   "threshold": 0.25999999999999995
+  },
+  "tfidf_erm80k": {
+   "temperature": 0.9524057535743106,
+   "threshold": 0.19999999999999996
+  },
+  "tfidf_reweight": {
+   "temperature": 0.828539978091032,
+   "threshold": 0.63
+  },
+  "tfidf_cda": {
+   "temperature": 1.0354452387794868,
+   "threshold": 0.26999999999999996
+  },
+  "tfidf_soft": {
+   "temperature": 0.7207836499504366,
+   "threshold": 0.19999999999999996
+  },
+  "tfidf_combo": {
+   "temperature": 0.5379439019761799,
+   "threshold": 0.27999999999999997
+  },
+  "bert_erm": {
+   "temperature": 0.8883165214045229,
+   "threshold": 0.3
+  },
+  "bert_cda": {
+   "temperature": 0.9392282703533661,
+   "threshold": 0.31999999999999995
+  },
+  "bert_reweight": {
+   "temperature": 0.7515493252529043,
+   "threshold": 0.73
+  },
+  "bert_dro": {
+   "temperature": 1.2069423642103723,
+   "threshold": 0.7999999999999999
+  },
+  "bert_soft": {
+   "temperature": 0.6098101889595434,
+   "threshold": 0.25999999999999995
+  },
+  "bert_combo": {
+   "temperature": 0.4551208570509135,
+   "threshold": 0.4699999999999999
+  },
+  "bert_distil_erm": {
+   "temperature": 1.006990624456531,
+   "threshold": 0.32999999999999996
+  },
+  "bert_distil_cda": {
+   "temperature": 1.0947893202828523,
+   "threshold": 0.36999999999999994
+  },
+  "bert_distil_reweight": {
+   "temperature": 0.9930579051217049,
+   "threshold": 0.71
+  },
+  "bert_distil_dro": {
+   "temperature": 1.3492529148397843,
+   "threshold": 0.7899999999999999
+  },
+  "bert_distil_soft": {
+   "temperature": 0.5767548559518665,
+   "threshold": 0.25999999999999995
+  },
+  "bert_distil_combo": {
+   "temperature": 0.48795638984808637,
+   "threshold": 0.4799999999999999
+  }
+ },
+ "best_by_val_bias_auc": "bert_distil_soft",
+ "erm_reference": "bert_distil_erm"
+}

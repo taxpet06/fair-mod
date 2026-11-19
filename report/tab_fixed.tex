@@ -1,0 +1,13 @@
+\begin{table}[t]\centering\small\setlength\tabcolsep{3pt}
+\resizebox{\linewidth}{!}{\begin{tabular}{lrrrrrr}\toprule
+& \multicolumn{3}{c}{False positives} & \multicolumn{3}{c}{False negatives}\\
+DistilBERT & fixed & new & total & fixed & new & total\\\midrule
+ERM & & & 6,666 & & & 4,399\\
++ CDA & 1,647 & 1,226 & 6,245 & 509 & 779 & 4,669\\
++ reweight & 1,960 & 1,781 & 6,487 & 562 & 1,197 & 5,034\\
++ group DRO & 2,945 & 3,660 & 7,381 & 808 & 2,291 & 5,882\\
++ soft labels & 945 & 1,494 & 7,215 & 687 & 369 & 4,081\\
++ combo & 1,586 & 2,682 & 7,762 & 894 & 823 & 4,328\\
+\bottomrule\end{tabular}}
+\caption{Test errors of each DistilBERT mitigation against ERM (seed 0, each model at its own validation threshold). \emph{fixed}: ERM errors the mitigation gets right; \emph{new}: errors ERM did not make.}\label{tab:fixed}
+\end{table}

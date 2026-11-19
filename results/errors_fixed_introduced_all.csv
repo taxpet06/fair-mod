@@ -1,0 +1,11 @@
+model,error,erm_errors,fixed,introduced,errors
+bert_distil_cda,FP,6666,1647,1226,6245
+bert_distil_cda,FN,4399,509,779,4669
+bert_distil_reweight,FP,6666,1960,1781,6487
+bert_distil_reweight,FN,4399,562,1197,5034
+bert_distil_dro,FP,6666,2945,3660,7381
+bert_distil_dro,FN,4399,808,2291,5882
+bert_distil_soft,FP,6666,945,1494,7215
+bert_distil_soft,FN,4399,687,369,4081
+bert_distil_combo,FP,6666,1586,2682,7762
+bert_distil_combo,FN,4399,894,823,4328

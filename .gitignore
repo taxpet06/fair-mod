@@ -1,0 +1,15 @@
+data/
+models/
+preds/
+logs/
+__pycache__/
+demo/frames/
+demo/*.webm
+report/*.aux
+report/*.log
+report/*.out
+report/*.bbl
+report/*.blg
+report/*.fls
+report/*.fdb_latexmk
+.venv/

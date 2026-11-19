@@ -1,0 +1,27 @@
+\begin{table}[t]\centering\small\setlength\tabcolsep{3pt}
+\resizebox{\linewidth}{!}{\begin{tabular}{lccccc}\toprule
+& \multicolumn{3}{c}{Template spread $\downarrow$} & Real & Neutral\\
+Model & all & seen & held-out & $|\Delta p|$ $\downarrow$ & flagged $\downarrow$\\\midrule
+B2 ERM & 0.133 & 0.148 & 0.020 & 0.041 & 20\%\\
+\quad ERM, 80K subsample & 0.101 & 0.114 & 0.029 & 0.037 & 19\%\\
+\quad + reweight & 0.155 & 0.173 & 0.080 & 0.047 & 12\%\\
+\quad + CDA & 0.135 & 0.109 & 0.031 & 0.011 & 27\%\\
+\quad + soft labels & 0.108 & 0.118 & 0.026 & 0.036 & 15\%\\
+\quad + combo & 0.108 & 0.094 & 0.041 & 0.009 & 19\%\\
+\midrule
+bert-mini ERM (80K, CPU) & 0.123 & 0.125 & 0.114 & 0.035 & 26\%\\
+\quad + reweight & 0.125 & 0.135 & 0.096 & 0.032 & 8\%\\
+\quad + CDA & 0.088 & 0.086 & 0.072 & 0.015 & 27\%\\
+\quad + group DRO & 0.101 & 0.101 & 0.093 & 0.030 & 1\%\\
+\quad + soft labels & 0.080 & 0.079 & 0.079 & 0.027 & 15\%\\
+\quad + combo & 0.096 & 0.100 & 0.073 & 0.013 & 11\%\\
+\midrule
+B3 DistilBERT ERM & 0.114 & 0.122 & 0.088 & 0.038 & 19\%\\
+\quad + reweight & 0.109 & 0.116 & 0.090 & 0.037 & 3\%\\
+\quad + CDA & 0.101 & 0.094 & 0.094 & 0.012 & 21\%\\
+\quad + group DRO & 0.126 & 0.123 & 0.121 & 0.033 & 0\%\\
+\quad + soft labels & 0.081 & 0.095 & 0.036 & 0.033 & 16\%\\
+\quad + combo & 0.112 & 0.109 & 0.103 & 0.009 & 12\%\\
+\bottomrule\end{tabular}}
+\caption{Counterfactual probes. \emph{Template spread}: mean absolute deviation of $P(\text{toxic})$ from the template mean across 18 identity terms (8 neutral and 5 toxic templates), split into terms in the CDA lexicon (\emph{seen}) and 5 held-out terms (sikh, queer, arab, mexican, african american). \emph{Real}: mean $|p(\text{swap})-p(\text{original})|$ over in-category swaps of 2{,}000 test comments. \emph{Neutral flagged}: share of the 144 neutral template sentences above the model's threshold.}\label{tab:cf}
+\end{table}

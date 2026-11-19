@@ -1,0 +1,125 @@
+\documentclass[11pt]{article}
+\usepackage[preprint]{acl}
+\geometry{letterpaper,margin=1in}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[protrusion=false]{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\input{numbers}
+
+\title{Fair-Mod: Measuring and Mitigating Identity Bias in a\\Toxicity Moderation Workbench}
+\author{Petros Taxiarchis \\ CS 72/272 Natural Language Processing, individual project}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Toxicity classifiers often learn that a mention of an identity such as \emph{gay}, \emph{Muslim}, or \emph{black}
+predicts toxicity, and so flag benign comments by or about those groups. I compare four mitigations (counterfactual
+data augmentation, group reweighting, group DRO, and soft labels) on TF-IDF logistic regression, DistilBERT, and
+bert-mini, evaluated on CivilComments-WILDS with identity-subgroup, counterfactual, and calibration metrics. A stronger encoder reduces identity-related
+ranking errors more than any mitigation. Soft labels are the only mitigation that raises both AUC and worst-group
+accuracy in all three model families. Reweighting and group DRO cut the identity false-positive gap threefold, but
+they miss more toxic comments about the same groups and break calibration, and augmentation helps only on the identity
+terms it swapped. In 200 hand-coded errors, non-hostile identity mentions explain \HandFPIdentity{} of 100 false
+positives, while missed toxic comments are mostly implicit hostility and sarcasm. The models drive Fair-Mod, a
+moderator workbench with calibrated scores, attributions, identity swaps, and a defer option.
+\end{abstract}
+
+\noindent\textbf{Content warning:} this paper quotes offensive comments.
+
+\section{Introduction}
+Platforms rely on automated toxicity classifiers because moderators cannot read every comment. Identity terms appear
+disproportionately often in abusive training comments, so these classifiers learn the term itself as evidence of
+toxicity \citep{dixon2018measuring,borkan2019nuanced}, and the people the filter should protect are silenced when they
+talk about their own identity \citep{sap2019risk}. In the proposal's exploration, a TF-IDF baseline scored ``She is a
+black woman'' at 0.996 and ``I am a gay man'' at 0.86, against 0.04 for ``I am a straight man''.
+
+I ask (1) how much identity-related error disparity can be removed without losing overall accuracy, and by which
+mitigation, and (2) whether a moderator-facing tool can make bias and uncertainty visible enough to support, rather
+than replace, a human decision. The contributions are a leakage-controlled comparison of four mitigations across three
+model families, a counterfactual test with identity terms the augmentation never saw, an error analysis with 200
+hand-coded errors, and a working moderator workbench.
+
+\section{Related work}
+\citet{dixon2018measuring} named \emph{unintended bias} in toxicity classifiers and mitigated it by adding non-toxic
+identity examples. \citet{borkan2019nuanced} introduced the Civil Comments data and the subgroup, BPSN, and BNSP AUC
+metrics used here. WILDS \citep{koh2021wilds} packaged an identity-annotated subset as a distribution-shift benchmark,
+where worst-group accuracy is the headline metric and group DRO \citep{sagawa2020distributionally} the standard
+baseline. \citet{davani2022dealing} argue for modelling annotator disagreement instead of discarding it, which
+motivates the soft-label variant.
+
+\section{Data}
+\label{sec:data}
+\paragraph{Source and licence.} CivilComments-WILDS \citep{koh2021wilds}\footnote{\url{https://wilds.stanford.edu/datasets/};
+downloaded from the Hugging Face mirror \url{https://huggingface.co/datasets/pietrolesci/civilcomments-wilds}.} has
+448{,}000 English comments from about 50 North American news sites (2015--2017), released under CC0. Crowd raters
+labelled toxicity, six subtypes, and which of eight identity groups a comment mentions (male, female, LGBTQ,
+christian, muslim, other religions, black, white); each label is the fraction of raters who applied it. The median
+test comment has \MedianRaters{} raters, and \BorderlineShare{} of test comments are 30--70\% toxic. I use the
+standard split.
+
+\paragraph{Preprocessing and leakage control.} Text is NFKC-normalised with whitespace collapsed; case and
+punctuation are kept because they carry signal. I drop train and validation comments whose normalised text appears in
+test, train comments that appear in validation, and duplicates within a split (\LeakTrain{}, \LeakVal{}, and
+\LeakTest{} rows), leaving \NTrain{} / \NVal{} / \NTest{}. The binary label is toxicity $\geq 0.5$; soft labels are the
+rater fractions from the mirror's raw file, joined on comment id. For reweighting and DRO, a comment's group is the
+rarest identity it mentions (or \emph{none}) crossed with its label: 18 groups, the smallest
+(\emph{other\_religions}/toxic) with \SmallestGroupN{} training comments.
+
+\section{Methods}
+\label{sec:methods}
+\paragraph{Models.} B1 always predicts non-toxic. B2 is TF-IDF over word uni- and bigrams (300K features) with L2
+logistic regression in scikit-learn \citep{pedregosa2011scikit}; \texttt{erm80k} trains it on the transformers' 80K
+subsample to separate model family from data size. B3 is DistilBERT \citep{sanh2019distilbert}, fine-tuned on the full
+training split with seven sigmoid heads (toxicity plus six subtypes): AdamW, lr $5{\times}10^{-5}$, batch 32, one
+epoch, 128 tokens, three seeds, on the Dartmouth Discovery cluster with PyTorch \citep{paszke2019pytorch} and Hugging
+Face Transformers \citep{wolf2020transformers}. bert-mini \citep{turc2019well}, an 11M-parameter BERT
+\citep{devlin2019bert}, gets the same heads on an 80K subsample (lr $10^{-4}$, one seed) on a laptop CPU, as a
+compute-constrained deployment. None of these settings were tuned. The DistilBERT learning rate is in the BERT
+fine-tuning grid \citep{devlin2019bert}. One epoch and 128 tokens were fixed for the CPU runs and kept so that all
+families share one recipe, so DistilBERT may be below what longer training reaches. 128 wordpieces keep the median
+test comment (\TokMedian{}) whole but truncate \TokOverOneTwoEight{} of test comments (\TokToxicOverOneTwoEight{} of
+toxic ones); 256 would truncate \TokOverTwoFiveSix{}. Full settings are in Appendix~\ref{app:settings}.
+
+\paragraph{Mitigations.} All are applied to every family, except group DRO, which needs a per-batch loop and is
+transformer-only.
+\begin{itemize}\setlength\itemsep{0pt}\setlength\parskip{0pt}
+\item \textbf{CDA} \citep{dixon2018measuring}: each training comment with a term from a 25-word lexicon gets a copy
+in which every term is swapped for a random member of its category (religion, orientation, race, gender), with the
+same label.
+\item \textbf{Reweighting}: loss weighted by inverse group frequency, normalised to mean 1 and clipped at 10.
+\item \textbf{Group DRO} \citep{sagawa2020distributionally}: online exponentiated-gradient weights over the 18 groups
+($\eta{=}0.01$).
+\item \textbf{Soft labels} \citep{davani2022dealing}: training on rater fractions. For logistic regression each
+comment appears as positive with weight $p$ and as negative with weight $1{-}p$, which gives the cross-entropy
+gradient for target $p$.
+\item \textbf{Combo}: CDA + reweighting + soft labels, fixed before any test number was seen.
+\end{itemize}
+
+\paragraph{Calibration, abstention, attribution.} One temperature on the toxicity logit is fit on validation by NLL
+\citep{guo2017calibration}. Each model's threshold is its validation-F1-optimal calibrated probability: only
+\ToxicShare{} of test comments are toxic, so a fixed 0.5 favours the majority class, and reweighting and DRO shift the
+base rate (DistilBERT thresholds: 0.33 ERM, 0.71 reweighting, 0.79 DRO). The app defers a comment when $|p-t|$ is
+below a moderator-chosen band; for evaluation, the logit distance from the threshold is the confidence behind the
+risk-coverage curve \citep{geifman2017selective}. Word-level integrated gradients \citep{sundararajan2017axiomatic}
+([PAD] baseline, 48 steps) explain transformer scores and pass a completeness self-check within 5\%; TF-IDF
+highlights are each unigram's coefficient times its tf-idf weight.
+
+\paragraph{Changes from the proposal} (details in Appendix~\ref{app:changes}). DistilBERT ran on the Dartmouth
+cluster and bert-mini on a laptop CPU; RoBERTa-base was not run, and bert-mini has one seed. Soft labels come from the
+WILDS raw file instead of the 1.8M-comment Hugging Face release, which removes that release's leakage risk (90.5\% of
+WILDS text is in its train split, measured in the proposal). Truncation is 128 rather than 256 wordpieces, integrated
+gradients is hand-written instead of Captum, and group DRO is transformer-only.
+
+\input{sections_results}
+
+\bibliography{refs}
+
+\input{appendix}
+\end{document}

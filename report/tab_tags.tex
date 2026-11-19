@@ -1,0 +1,15 @@
+\begin{table}[t]\centering\small\setlength\tabcolsep{3pt}
+\resizebox{\linewidth}{!}{\begin{tabular}{lcccccc}\toprule
+& \multicolumn{3}{c}{bert ERM} & \multicolumn{3}{c}{best}\\
+Tag & FP & FN & ok & FP & FN & ok\\\midrule
+identity mention & 62\% & 61\% & 37\% & 60\% & 62\% & 37\%\\
+profanity & 5\% & 4\% & 2\% & 5\% & 4\% & 2\%\\
+insult word & 15\% & 9\% & 4\% & 14\% & 9\% & 4\%\\
+quote or reported & 30\% & 36\% & 30\% & 30\% & 37\% & 30\%\\
+sarcasm marker & 4\% & 5\% & 4\% & 4\% & 5\% & 4\%\\
+borderline label & 56\% & 92\% & 14\% & 56\% & 92\% & 14\%\\
+few raters ($<$6) & 24\% & 2\% & 66\% & 23\% & 2\% & 66\%\\
+$n$ & 6,666 & 4,399 & 121,542 & 7,215 & 4,081 & 121,311\\
+\bottomrule\end{tabular}}
+\caption{Share of test comments carrying each heuristic tag, by outcome. \emph{borderline label}: 30--70\% of raters said toxic.}\label{tab:tags}
+\end{table}

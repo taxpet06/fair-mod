@@ -1,0 +1,12 @@
+stat,value
+test_median_wordpieces,60.0
+test_share_gt128,0.2124699299433665
+test_share_gt256,0.0017042840875670213
+test_toxic_share_gt128,0.17550262092760932
+test_toxic_share,0.11365161718461318
+benign_id_any_rater_toxic,0.4517978229835832
+benign_noid_any_rater_toxic,0.23553309148222124
+benign_id_mean_frac,0.11239197620694363
+benign_noid_mean_frac,0.05387903611189575
+smallest_train_group,other_religions_1
+smallest_train_group_n,988

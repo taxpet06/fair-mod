@@ -1,0 +1,11 @@
+torch==2.15.0
+transformers==5.22.2
+scikit-learn==1.9.1
+pandas==3.1.1
+numpy==2.5.4
+gradio==6.32.0
+matplotlib==3.11.2
+pyarrow==26.0.1
+joblib==1.6.0
+huggingface_hub==2.4.0
+openpyxl==3.1.5

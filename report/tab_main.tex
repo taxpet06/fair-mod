@@ -1,0 +1,28 @@
+\begin{table*}[t]\centering\small
+\resizebox{\linewidth}{!}{\begin{tabular}{lcccccc}\toprule
+Model & ROC-AUC $\uparrow$ & F1 $\uparrow$ & Bias AUC $\uparrow$ & Worst-group acc $\uparrow$ & Mean $|$FPR gap$|$ $\downarrow$ & ECE $\downarrow$\\\midrule
+B1 majority & 0.500 & 0.000 & 0.500 & 0.000 & 0.000 & 0.114\\
+\midrule
+B2 ERM & 0.912 {\scriptsize$\pm$0.002} & \textbf{0.599} & \textbf{0.871} {\scriptsize$\pm$0.003} & 0.509 {\scriptsize$\pm$0.022} & 0.103 & 0.015\\
+\quad ERM, 80K subsample & 0.894 {\scriptsize$\pm$0.003} & 0.569 & 0.847 {\scriptsize$\pm$0.003} & 0.478 {\scriptsize$\pm$0.023} & 0.124 & 0.024\\
+\quad + reweight & 0.884 {\scriptsize$\pm$0.003} & 0.568 & 0.856 {\scriptsize$\pm$0.004} & 0.432 {\scriptsize$\pm$0.023} & \textbf{0.038} & 0.089\\
+\quad + CDA & 0.906 {\scriptsize$\pm$0.002} & 0.591 & 0.867 {\scriptsize$\pm$0.003} & 0.509 {\scriptsize$\pm$0.021} & 0.092 & 0.011\\
+\quad + soft labels & \textbf{0.914} {\scriptsize$\pm$0.002} & 0.593 & 0.866 {\scriptsize$\pm$0.004} & \textbf{0.604} {\scriptsize$\pm$0.022} & 0.143 & 0.027\\
+\quad + combo & 0.889 {\scriptsize$\pm$0.002} & 0.562 & 0.854 {\scriptsize$\pm$0.004} & 0.474 {\scriptsize$\pm$0.023} & 0.070 & \textbf{0.005}\\
+\midrule
+bert-mini ERM (80K, CPU) & 0.914 {\scriptsize$\pm$0.002} & 0.606 & 0.874 {\scriptsize$\pm$0.003} & 0.510 {\scriptsize$\pm$0.035} & 0.077 & \textbf{0.007}\\
+\quad + reweight & 0.896 {\scriptsize$\pm$0.002} & 0.567 & 0.866 {\scriptsize$\pm$0.003} & 0.419 {\scriptsize$\pm$0.048} & \textbf{0.028} & 0.158\\
+\quad + CDA & 0.914 {\scriptsize$\pm$0.002} & 0.605 & 0.874 {\scriptsize$\pm$0.003} & 0.546 {\scriptsize$\pm$0.029} & 0.094 & 0.012\\
+\quad + group DRO & 0.862 {\scriptsize$\pm$0.002} & 0.487 & 0.834 {\scriptsize$\pm$0.004} & 0.171 {\scriptsize$\pm$0.018} & 0.048 & 0.276\\
+\quad + soft labels & \textbf{0.920} {\scriptsize$\pm$0.002} & \textbf{0.613} & 0.880 {\scriptsize$\pm$0.003} & \textbf{0.567} {\scriptsize$\pm$0.024} & 0.084 & 0.013\\
+\quad + combo & 0.914 {\scriptsize$\pm$0.002} & 0.598 & \textbf{0.882} {\scriptsize$\pm$0.003} & 0.563 {\scriptsize$\pm$0.025} & 0.050 & 0.044\\
+\midrule
+B3 DistilBERT ERM & 0.940 {\scriptsize$\pm$0.002} & 0.659 & 0.905 {\scriptsize$\pm$0.003} & 0.614 {\scriptsize$\pm$0.039} & 0.085 & \textbf{0.007}\\
+\quad + reweight & 0.930 {\scriptsize$\pm$0.002} & 0.635 & 0.902 {\scriptsize$\pm$0.003} & 0.496 {\scriptsize$\pm$0.037} & \textbf{0.025} & 0.110\\
+\quad + CDA & 0.939 {\scriptsize$\pm$0.002} & 0.656 & 0.904 {\scriptsize$\pm$0.003} & 0.606 {\scriptsize$\pm$0.029} & 0.075 & 0.011\\
+\quad + group DRO & 0.914 {\scriptsize$\pm$0.002} & 0.581 & 0.886 {\scriptsize$\pm$0.003} & 0.345 {\scriptsize$\pm$0.026} & 0.026 & 0.191\\
+\quad + soft labels & \textbf{0.943} {\scriptsize$\pm$0.002} & \textbf{0.661} & \textbf{0.910} {\scriptsize$\pm$0.003} & \textbf{0.641} {\scriptsize$\pm$0.027} & 0.084 & 0.009\\
+\quad + combo & 0.937 {\scriptsize$\pm$0.002} & 0.640 & 0.908 {\scriptsize$\pm$0.003} & 0.596 {\scriptsize$\pm$0.029} & 0.039 & 0.039\\
+\bottomrule\end{tabular}}
+\caption{Test results (WILDS test, 132,607 comments). Thresholds and temperatures are fit on validation; $\pm$ is half the 95\% bootstrap interval (50 resamples of the test set; it does not include training-seed variance). Bias AUC is the \citet{borkan2019nuanced} final metric (generalised mean, $p{=}{-}5$, of subgroup, BPSN and BNSP AUC, averaged with overall AUC). Worst-group accuracy is the minimum over the 16 identity$\times$label groups. FPR gap is identity-group FPR minus background FPR. Bold marks the best value within each model family.}\label{tab:main}
+\end{table*}

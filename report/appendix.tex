@@ -1,0 +1,62 @@
+\clearpage
+\appendix
+\section*{Supplementary material}
+\section{Additional results}
+\label{app:more}
+Counterfactual probes (Table~\ref{tab:cf}), per-identity metrics (Table~\ref{tab:identity}), heuristic error tags
+(Table~\ref{tab:tags}), risk-coverage (Figure~\ref{fig:rc}), and per-identity FPR and template scores
+(Figure~\ref{fig:templates}).
+
+\input{tab_cf}
+\input{tab_tags}
+\input{tab_identity}
+\begin{figure}[t]\centering
+\includegraphics[width=\columnwidth]{../results/fig_risk_coverage.png}
+\caption{Risk-coverage on test: error rate among the comments decided automatically, when the least confident are
+deferred first. Confidence is the logit distance from each model's validation threshold.}\label{fig:rc}
+\end{figure}
+\begin{figure*}[t]\centering
+\includegraphics[width=0.49\textwidth]{../results/fig_fpr_by_identity.png}\hfill
+\includegraphics[width=0.49\textwidth]{../results/fig_templates.png}
+\caption{Left: test FPR by identity. Right: mean $P(\text{toxic})$ on neutral template sentences by identity term,
+sorted by TF-IDF ERM. The ERM models' worst FPRs are on \emph{black}, \emph{white}, \emph{LGBTQ}, and
+\emph{muslim}.}\label{fig:templates}
+\end{figure*}
+
+\onecolumn
+\section{Changes from the proposal}
+\label{app:changes}
+\begin{center}\small
+\begin{tabular}{p{0.24\textwidth}p{0.30\textwidth}p{0.38\textwidth}}\toprule
+Proposal & Final & Why \\\midrule
+Training on university GPU servers & DistilBERT on the Dartmouth Discovery cluster (free-tier \texttt{gpu\_preempt}: H200, A5000/A5500, RTX 2080 Ti); bert-mini on a 12-core laptop CPU & As proposed for B3. Jobs stream code and data over \texttt{srun} stdin/stdout because GPU nodes cannot read home storage. The CPU runs are kept as a compute-constrained comparison (bert-mini ${\sim}150$, bert-small ${\sim}18$, DistilBERT ${\sim}7$ train examples/s on the laptop). \\
+DistilBERT or RoBERTa-base (B3) & DistilBERT, full 267K training split, 1 epoch; plus bert-mini on an 80K subsample & DistilBERT matches the proposal. RoBERTa-base was not run. A same-subsample TF-IDF run (\texttt{erm80k}) separates data size from model family. \\
+Three seeds for neural models & Three seeds for every DistilBERT variant; one for bert-mini & DistilBERT seeds are cheap on the cluster. bert-mini runs took ${\sim}40$ CPU-minutes each, so its comparisons rest on bootstrap CIs, which cover test sampling only. \\
+Soft labels from the 1.8M Hugging Face pool & Soft labels joined by comment id from the WILDS raw file & Same annotator fractions without the cross-release leakage risk (90.5\% text overlap). The 1.8M pool is unused. \\
+Truncate at 256 subword tokens & 128 wordpieces for every transformer & Fixed for the CPU bert-mini runs and kept for DistilBERT so the families share one recipe. It truncates \TokOverOneTwoEight{} of test comments, against \TokOverTwoFiveSix{} at 256; one hand-coded missed slur sits past the cut (Section~\ref{sec:errors}). \\
+Captum for integrated gradients & 20-line hand-written IG with a completeness self-check & Avoids a dependency; the completeness axiom is checked numerically. \\
+Group DRO on both model families & transformers only & DRO needs a per-batch loss loop; sklearn's logistic regression has none. \\
+200 hand-coded errors & 200 hand-coded errors of the best model, 100 FP and 100 FN (\texttt{results/}\allowbreak\texttt{errors\_hand\_coded.csv}), plus heuristic tags on all errors & As proposed. The hand labels are the author's own; the automated tags extend coverage to every error and are checked against the hand labels (Section~\ref{sec:errors}). \\
+\bottomrule\end{tabular}
+\end{center}
+
+\section{Settings}
+\label{app:settings}
+\begin{center}\small
+\begin{tabular}{lp{0.74\textwidth}}\toprule
+TF-IDF & word 1--2 grams, min\_df 3, 300{,}000 features, sublinear tf; vectoriser fit once on the training split \\
+Logistic regression & L2, $C{=}4$, liblinear, max\_iter 300 \\
+DistilBERT & \texttt{distilbert-base-uncased}, 7 sigmoid heads, mean BCE, lr $5{\times}10^{-5}$, bf16 autocast where supported, full training split \\
+bert-mini & \texttt{prajjwal1/bert-mini}, tokenizer \texttt{bert-base-uncased}, same heads, lr $10^{-4}$, CPU \\
+Optimisation & AdamW, weight decay 0.01, batch 32, 1 epoch, 6\% linear warm-up then linear decay, grad-norm clip 1.0 \\
+Sequence length & 128 wordpieces, dynamic padding, length-bucketed shuffled batches \\
+Training data & DistilBERT: all 267{,}112 training comments. bert-mini: 80{,}000 sampled with seed 0 (same sample for every variant). CDA adds copies \\
+Reweighting & inverse frequency of 18 groups, normalised to mean 1, clipped at 10 \\
+Group DRO & online exponentiated gradient over 18 groups, $\eta{=}0.01$ \\
+Calibration & one temperature on the toxicity logit, grid over $[0.25, 4]$, minimum validation NLL \\
+Threshold & validation-F1-optimal over $\{0.05, 0.06, \dots, 0.95\}$ \\
+IG & [PAD]-embedding baseline, special tokens fixed, 48 steps (32 in the error analysis) \\
+Bootstrap & 50 test-set resamples, percentile 95\% interval \\
+Seeds & data subsample fixed at 0; training seed 0 (all models) and 1, 2 (DistilBERT) \\
+\bottomrule\end{tabular}
+\end{center}

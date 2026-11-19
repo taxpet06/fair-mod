@@ -1,0 +1,15 @@
+\begin{table*}[t]\centering\small
+\resizebox{\linewidth}{!}{\begin{tabular}{lrrccccccccc}\toprule
+& & & \multicolumn{3}{c}{BPSN AUC $\uparrow$} & \multicolumn{3}{c}{FPR $\downarrow$} & \multicolumn{3}{c}{FNR $\downarrow$}\\
+Identity & $n$ & toxic & TF-IDF & ERM & best & TF-IDF & ERM & best & TF-IDF & ERM & best\\\midrule
+LGBTQ & 4,390 & 27\% & 0.783 & 0.829 & 0.838 & 0.200 & 0.204 & 0.204 & 0.352 & 0.273 & 0.272\\
+black & 4,826 & 31\% & 0.721 & 0.798 & 0.821 & 0.277 & 0.242 & 0.234 & 0.287 & 0.247 & 0.247\\
+christian & 13,277 & 9\% & 0.925 & 0.947 & 0.947 & 0.048 & 0.046 & 0.050 & 0.491 & 0.386 & 0.359\\
+female & 16,309 & 14\% & 0.886 & 0.923 & 0.929 & 0.072 & 0.071 & 0.074 & 0.403 & 0.328 & 0.315\\
+male & 14,185 & 15\% & 0.873 & 0.913 & 0.919 & 0.085 & 0.086 & 0.091 & 0.375 & 0.308 & 0.290\\
+muslim & 6,861 & 23\% & 0.798 & 0.861 & 0.870 & 0.163 & 0.141 & 0.145 & 0.388 & 0.332 & 0.327\\
+other religions & 3,454 & 15\% & 0.863 & 0.908 & 0.910 & 0.101 & 0.084 & 0.095 & 0.395 & 0.386 & 0.353\\
+white & 7,828 & 28\% & 0.733 & 0.812 & 0.824 & 0.250 & 0.208 & 0.220 & 0.284 & 0.274 & 0.261\\
+\bottomrule\end{tabular}}
+\caption{Per-identity test metrics for TF-IDF ERM, DistilBERT ERM, and the best mitigated DistilBERT model by validation bias AUC (\texttt{bert\_distil\_soft}). BPSN AUC is low when non-toxic comments that mention the group score above toxic comments that don't.}\label{tab:identity}
+\end{table*}

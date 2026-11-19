@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fair-Mod slides</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400..700&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+:root {
+  --ink: #14213D;
+  --soft: #4A5568;
+  --paper: #F7F6F2;
+  --paper2: #ECEAE3;
+  --orange: #C2410C;
+  --blue: #2A78D6;
+  --line: #D6D2C6;
+}
+body { font-family: 'IBM Plex Sans', Arial, sans-serif; color: var(--ink); }
+section {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 128px 128px 160px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  counter-increment: page;
+}
+section.alt { background: var(--paper2); }
+section.dark { background: var(--ink); color: #F2EFE8; }
+h1, h2 { font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; letter-spacing: -0.5px; }
+h1 { font-size: 112px; line-height: 1.05; }
+h2 { font-size: 64px; line-height: 1.1; }
+h3 { font-size: 36px; line-height: 1.2; font-weight: 600; }
+p { font-size: 30px; line-height: 1.4; color: var(--soft); }
+.dark p { color: #C9CFDB; }
+.lede { font-size: 40px; line-height: 1.3; color: var(--ink); }
+.small { font-size: 24px; }
+.foot { position: absolute; left: 128px; bottom: 64px; width: 1664px; font-size: 24px; color: var(--soft); }
+.dark .foot { color: #9AA3B5; }
+
+/* cover */
+.cover-grid { display: flex; gap: 96px; align-items: flex-end; flex: 1; }
+.cover-left { display: flex; flex-direction: column; gap: 32px; width: 980px; }
+.probe { display: flex; flex-direction: column; gap: 16px; width: 588px; background: #FFFFFF; padding: 40px; box-sizing: border-box; border-radius: 12px; box-shadow: 0 8px 32px rgba(20, 33, 61, 0.10); }
+.probe .row { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; }
+.probe .q { font-size: 32px; color: var(--ink); }
+.probe .num { font-size: 48px; font-weight: 600; font-family: 'Source Serif 4', Georgia, serif; }
+.probe .hot { color: var(--orange); }
+.probe .cool { color: var(--blue); }
+
+/* cards */
+.cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; }
+.card { background: #FFFFFF; border-radius: 12px; padding: 40px; display: flex; flex-direction: column; gap: 16px; box-shadow: 0 6px 24px rgba(20, 33, 61, 0.08); }
+.card p { font-size: 28px; }
+.card .tag { font-size: 24px; font-weight: 600; color: var(--orange); }
+.band { display: flex; gap: 24px; align-items: baseline; border-top: 2px solid var(--line); padding-top: 32px; }
+.band .label { font-size: 28px; font-weight: 600; color: var(--ink); min-width: max-content; }
+.band p { font-size: 28px; }
+
+/* results */
+.split { display: flex; gap: 72px; align-items: flex-start; }
+.restable { font-size: 28px; color: var(--ink); width: 920px; }
+.hl { background: #FFF1E6; }
+.base { background: var(--paper2); }
+.figure { display: flex; flex-direction: column; gap: 16px; }
+
+/* findings */
+.grid4 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.find { background: #FFFFFF; border-radius: 12px; padding: 32px 40px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 6px 24px rgba(20, 33, 61, 0.08); }
+.find .big { font-family: 'Source Serif 4', Georgia, serif; font-size: 56px; font-weight: 600; color: var(--orange); }
+.find p { font-size: 28px; color: var(--ink); }
+
+/* takeaways */
+.takes { display: flex; flex-direction: column; gap: 28px; }
+.take { display: flex; gap: 32px; align-items: baseline; }
+.take .n { font-family: 'Source Serif 4', Georgia, serif; font-size: 56px; font-weight: 600; color: #F2A65A; min-width: 48px; }
+.take p { font-size: 34px; color: #F2EFE8; }
+.next { display: flex; gap: 48px; border-top: 2px solid #33415F; padding-top: 32px; }
+.next p { font-size: 26px; }
+
+/* arrival motion: plain rules are the finished look */
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } }
+.card, .find, .take, .probe { animation: rise 500ms ease-out both; animation-delay: calc(var(--i, 0) * 120ms); }
+/* local viewer: one 1920x1080 slide at a time, scaled to the window */
+html, body { margin: 0; background: #111; overflow: hidden; }
+section { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; transform-origin: 0 0; display: none; }
+section.on { display: flex; }
+h1, h2, h3, p { margin: 0; }
+table { border-collapse: collapse; } th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); }
+aside { display: none; }
+#notes { position: fixed; left: 0; right: 0; bottom: 0; max-height: 40vh; overflow: auto; background: #fffbe6; color: #222; font: 18px/1.5 'IBM Plex Sans', Arial, sans-serif; padding: 16px 24px; display: none; z-index: 9; }
+body.shownotes #notes { display: block; }
+@media print {
+  @page { size: 1920px 1080px; margin: 0; }
+  html, body { overflow: visible; background: none; }
+  section { display: flex !important; position: relative; transform: none !important; break-after: page; }
+  .card, .find, .take, .probe { animation: none; }
+  #notes { display: none !important; }
+}
+</style></head><body>
+<section id="cover">
+<div class="cover-grid">
+<div class="cover-left">
+<h1>Fair-Mod</h1>
+<p class="lede">Measuring and mitigating identity bias in a toxicity moderation workbench</p>
+<p>Can we cut identity-term errors without losing accuracy, and can a tool help a moderator see when a flag rests on an identity word?</p>
+<p class="small">Petros Taxiarchis · COSC 72</p>
+</div>
+<div class="probe" style="--i:2">
+<p class="small">A TF-IDF baseline on Civil Comments, P(toxic):</p>
+<div class="row"><p class="q">“I am a gay man”</p><p class="num hot">0.86</p></div>
+<div class="row"><p class="q">“I am a straight man”</p><p class="num cool">0.04</p></div>
+<div class="row"><p class="q">“She is a black woman”</p><p class="num hot">0.996</p></div>
+</div>
+</div>
+<p class="foot">Content warning: examples contain offensive language from real news comments.</p>
+<aside>Toxicity classifiers learn that identity words predict toxicity, because those words show up so often in abusive training comments. The result is that people talking about their own identity get flagged. Here is my own TF-IDF baseline from the proposal: “I am a gay man” scores 0.86 and the straight version 0.04. My question had two parts: how much of this can mitigation remove without losing accuracy, and can a moderator tool make the bias visible instead of hiding it.</aside>
+</section>
+<section id="built" class="alt">
+<h2>What I built</h2>
+<div class="cols">
+<div class="card" style="--i:0">
+<p class="tag">Data</p>
+<h3>CivilComments-WILDS</h3>
+<p>445K news comments with 8 identity-mention flags. Standard splits; any train or val text that also appears in test is removed.</p>
+<p>Soft labels: each comment’s share of raters who called it toxic (median 4 raters).</p>
+</div>
+<div class="card" style="--i:1">
+<p class="tag">Three model families</p>
+<h3>TF-IDF · bert-mini · DistilBERT</h3>
+<p>TF-IDF + logistic regression on 267K comments.</p>
+<p>bert-mini on a laptop CPU, 80K comments.</p>
+<p>DistilBERT on the Dartmouth GPU cluster, full data, 3 seeds.</p>
+</div>
+<div class="card" style="--i:2">
+<p class="tag">Four mitigations, all families</p>
+<h3>CDA · reweight · group DRO · soft</h3>
+<p>Swap identity terms in training copies; upweight rare identity × label groups; minimise the worst group’s loss; train on rater fractions. Plus a combo fixed in advance.</p>
+</div>
+</div>
+<div class="band">
+<p class="label">Evaluation</p>
+<p>Threshold and temperature from validation only. Subgroup / BPSN / BNSP AUC, FPR gap, worst-group accuracy, calibration, held-out identity templates, and identity swaps of real test comments.</p>
+</div>
+<p class="foot">Fair-Mod · Methods</p>
+<aside>Data: CivilComments-WILDS, about 445 thousand comments, each flagged for which of eight identity groups it mentions. I removed anything in train or validation that also appears in test, and I took soft labels straight from the raw file: the fraction of raters who said toxic. Three model families, so I can tell whether a mitigation works in general or only for one model: TF-IDF, a tiny bert-mini I could train on my laptop, and DistilBERT on the Dartmouth GPU cluster with three seeds. Four mitigations from the proposal, applied to every family. The decision threshold and calibration come from validation only, so the test set never picks anything.</aside>
+</section>
+<section id="results">
+<h2>Results</h2>
+<div class="split">
+<div class="figure">
+<table class="restable">
+<tr><th style="width:36%">Test set, 133K</th><th style="width:16%;text-align:right">AUC</th><th style="width:16%;text-align:right">Bias AUC</th><th style="width:16%;text-align:right">Worst grp</th><th style="width:16%;text-align:right">FPR gap</th></tr>
+<tr class="base"><td>TF-IDF ERM</td><td style="text-align:right">0.912</td><td style="text-align:right">0.871</td><td style="text-align:right">0.51</td><td style="text-align:right">0.103</td></tr>
+<tr><td>DistilBERT ERM</td><td style="text-align:right">0.940</td><td style="text-align:right">0.905</td><td style="text-align:right">0.58</td><td style="text-align:right">0.075</td></tr>
+<tr class="hl"><td>+ soft labels</td><td style="text-align:right">0.943</td><td style="text-align:right">0.909</td><td style="text-align:right">0.62</td><td style="text-align:right">0.078</td></tr>
+<tr><td>+ CDA</td><td style="text-align:right">0.939</td><td style="text-align:right">0.905</td><td style="text-align:right">0.60</td><td style="text-align:right">0.072</td></tr>
+<tr><td>+ reweight</td><td style="text-align:right">0.930</td><td style="text-align:right">0.902</td><td style="text-align:right">0.48</td><td style="text-align:right">0.023</td></tr>
+<tr><td>+ group DRO</td><td style="text-align:right">0.914</td><td style="text-align:right">0.887</td><td style="text-align:right">0.35</td><td style="text-align:right">0.029</td></tr>
+<tr><td>+ combo</td><td style="text-align:right">0.937</td><td style="text-align:right">0.909</td><td style="text-align:right">0.56</td><td style="text-align:right">0.034</td></tr>
+</table>
+<p class="small">DistilBERT rows: mean of 3 seeds (AUC s.d. ≤ 0.001, worst-group s.d. ≈ 0.03). FPR gap: mean |identity FPR − background FPR|.</p>
+</div>
+<img src="fig_tradeoff.png" alt="Scatter of overall AUC against bias AUC for every model: DistilBERT models cluster top right near 0.94 and 0.91, bert-mini and TF-IDF lower left; reweight and DRO sit below and left of their family’s ERM" style="width:672px;height:497px;object-fit:contain">
+</div>
+<p class="foot">Fair-Mod · Results</p>
+<aside>The biggest effect is the model, not the mitigation. DistilBERT ERM beats every TF-IDF variant on AUC and on bias AUC. Among mitigations, soft labels are the only one that never lowers AUC: best AUC and best bias AUC across all three seeds, accuracy within 0.01 of ERM, and the highest worst-group accuracy, though that last gain is within seed noise. But it does not shrink the false-positive gap. Reweighting and group DRO shrink that gap about three times, but they pay for it: worst-group accuracy falls because toxic comments about those same groups get missed, and calibration breaks. So which mitigation is best depends on which error you care about. That is a policy choice, not a modelling one.</aside>
+</section>
+<section id="errors" class="alt">
+<h2>What the errors show</h2>
+<div class="grid4">
+<div class="find" style="--i:0"><p class="big">92%</p><p>of DistilBERT’s missed toxic comments had raters split 30–70%. Errors live where people disagree.</p></div>
+<div class="find" style="--i:1"><p class="big">19%</p><p>of neutral identity sentences (“I’m proud to be gay.”) flagged by DistilBERT ERM. Reweighting: 3.5%, DRO: 0%.</p></div>
+<div class="find" style="--i:2"><p class="big">0.038 → 0.012</p><p>Score change under identity swaps after CDA. On identity words it never swapped, no gain (0.088 → 0.094).</p></div>
+<div class="find" style="--i:3"><p class="big">56% → 64%</p><p>Confident identity false positives with an identity word in the top 3 integrated-gradients words: ERM → soft labels.</p></div>
+</div>
+<p>Hand-coding 200 errors: a harmless identity mention causes 28 of 100 false positives; missed toxic comments are mostly implicit hostility (30) or sarcasm (13). Some confident “false positives” are label noise: “You are a NASTY WOMAN”, toxic to only 32% of 65 raters.</p>
+<p class="foot">Fair-Mod · Error analysis</p>
+<aside>Four things from the error analysis. First, errors concentrate where raters disagreed: 92 percent of missed toxic comments sat between 30 and 70 percent toxic. Second, the template probe: DistilBERT still flags about one in five neutral sentences like “I’m proud to be gay”. Third, augmentation works only on the words it swapped; on held-out identity terms there is no gain. Fourth, integrated gradients: an identity word is still among the top three words in more than half of the confident identity false positives, and more so for the soft-label model. Soft labels probably copy the raters’ own partial sensitivity to identity mentions. That last point is a hypothesis. Finally, I hand-coded 200 errors: the identity mention is the real cause in only 28 of 100 false positives, and the missed toxic comments are mostly implicit hostility or sarcasm, which have no tell-tale words.</aside>
+</section>
+<section id="takeaways" class="dark">
+<h2>Takeaways</h2>
+<div class="takes">
+<div class="take" style="--i:0"><p class="n">1</p><p>A stronger encoder on more data removes more identity bias than any mitigation on a weaker model.</p></div>
+<div class="take" style="--i:1"><p class="n">2</p><p>Soft labels raise AUC in every model family, with accuracy within 0.01 of ERM. Closing the false-positive gap (reweight, DRO) means missing more attacks on the same groups. Which error to accept is a policy choice.</p></div>
+<div class="take" style="--i:2"><p class="n">3</p><p>So the tool defers instead of deciding: calibrated scores, a defer band, word attributions and an identity-swap table, shown live in the demo.</p></div>
+</div>
+<div class="next">
+<p><b>Limits:</b> mentions, not authors; 8 coarse groups; labels from ~4 raters; one coder for the hand-coded errors.</p>
+<p><b>Next:</b> per-rater labels; context-aware swaps; group-aware thresholds; longer inputs; a second dataset.</p>
+</div>
+<p class="foot">Fair-Mod · Code, results and demo video in the project repository</p>
+<aside>Three takeaways. One: model capacity and data did more for identity bias than any of the mitigations. Two: soft labels are the one mitigation that never lowers AUC, and closing the false-positive gap always cost missed attacks on the same groups, so the choice between those errors belongs to people, not the model. Three: that is why the tool defers instead of auto-removing. Now the demo: a benign identity comment the baseline flags, the identity-swap table, a real comment defending Muslims that the ERM model flags, a comment raters split 50-50 on, where the app shows that split next to the model's flag, and a failure case, “go back to where you came from”, which the best model lets through at a toxicity of 0.02.</aside>
+</section>
+<div id="notes"></div>
+<script>
+// ←/→/space/PageUp/PageDown navigate, N toggles speaker notes, F fullscreen; #3 in the URL opens slide 3.
+const S = [...document.querySelectorAll('section')], notes = document.getElementById('notes');
+let i = Math.min(Math.max((parseInt(location.hash.slice(1)) || 1) - 1, 0), S.length - 1);
+function fit() { const k = Math.min(innerWidth / 1920, innerHeight / 1080);
+  S.forEach(s => s.style.transform = `translate(${(innerWidth - 1920 * k) / 2}px,${(innerHeight - 1080 * k) / 2}px) scale(${k})`); }
+function show() { S.forEach((s, j) => s.classList.toggle('on', j === i));
+  notes.textContent = `Slide ${i + 1}/${S.length} — ` + (S[i].querySelector('aside')?.textContent || ''); history.replaceState(null, '', '#' + (i + 1)); }
+addEventListener('keydown', e => {
+  if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) i = Math.min(i + 1, S.length - 1);
+  else if (['ArrowLeft', 'PageUp'].includes(e.key)) i = Math.max(i - 1, 0);
+  else if (e.key === 'n') document.body.classList.toggle('shownotes');
+  else if (e.key === 'f') document.documentElement.requestFullscreen?.();
+  else return; e.preventDefault(); show(); });
+addEventListener('click', e => { if (!notes.contains(e.target)) { i = Math.min(i + 1, S.length - 1); show(); } });
+addEventListener('resize', fit); fit(); show();
+</script></body></html>
